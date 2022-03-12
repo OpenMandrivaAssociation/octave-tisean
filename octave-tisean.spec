@@ -1,15 +1,11 @@
 %global octpkg tisean
 
-# fix debuginfo-without-sources
-#define debug_package %{nil}
-
 Summary:	Port of TISEAN 3.0.1 for Octave
 Name:		octave-%{octpkg}
 Version:	0.2.3
 Release:	1
 Url:		https://octave.sourceforge.io/%{octpkg}/
 Source0:	https://downloads.sourceforge.net/octave/%{octpkg}-%{version}.tar.gz
-#Patch0:		%{name}-0.2.3-fortran.patch
 License:	GPLv3+
 Group:		Sciences/Mathematics
 
