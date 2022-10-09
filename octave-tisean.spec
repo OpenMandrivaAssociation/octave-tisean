@@ -11,6 +11,7 @@ Group:		Sciences/Mathematics
 
 BuildRequires:	octave-devel >= 4.0.0
 BuildRequires:	gcc-gfortran
+BuildRequires:	gomp-devel
 BuildRequires:	octave-signal >= 1.3.0
 
 Requires:	octave(api) = %{octave_api}
