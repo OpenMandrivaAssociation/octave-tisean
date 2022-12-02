@@ -4,7 +4,7 @@ Summary:	Port of TISEAN 3.0.1 for Octave
 Name:		octave-%{octpkg}
 Version:	0.2.3
 Release:	1
-Url:		https://octave.sourceforge.io/%{octpkg}/
+Url:		https://packages.octave.org/%{octpkg}/
 Source0:	https://downloads.sourceforge.net/octave/%{octpkg}-%{version}.tar.gz
 License:	GPLv3+
 Group:		Sciences/Mathematics
@@ -22,8 +22,6 @@ Requires(postun): octave
 
 %description
 Port of TISEAN 3.0.1 for Octave
-
-This package is part of external Octave-Forge collection.
 
 %files
 %license COPYING
