@@ -1,43 +1,43 @@
 %global octpkg tisean
 
-Summary:	Port of TISEAN 3.0.1 for Octave
-Name:		octave-%{octpkg}
+Summary:	Nonlinear Time Series Analysis
+Name:		octave-tisean
 Version:	0.2.3
-Release:	1
-Url:		https://packages.octave.org/%{octpkg}/
-Source0:	https://downloads.sourceforge.net/octave/%{octpkg}-%{version}.tar.gz
+Release:	2
 License:	GPLv3+
 Group:		Sciences/Mathematics
+Url:		https://packages.octave.org/tisean/
+Source0:	https://downloads.sourceforge.net/octave/tisean-%{version}.tar.gz
+# (upstream) https://savannah.gnu.org/bugs/index.php?61583
+Patch0:		of-tisean-error_state.patch
 
-BuildRequires:	octave-devel >= 4.0.0
+BuildRequires:  octave-devel >= 4.0.0
+BuildRequires:	octave-signal >= 1.3.0
 BuildRequires:	gcc-gfortran
 BuildRequires:	gomp-devel
-BuildRequires:	octave-signal >= 1.3.0
 
 Requires:	octave(api) = %{octave_api}
-Requires:	octave-signal >= 1.3.0
+Requires:  	octave-signal >= 1.3.0
 
 Requires(post): octave
 Requires(postun): octave
 
 %description
-Port of TISEAN 3.0.1 for Octave
+Nonlinear Time Series Analysis. Port of TISEAN 3.0.1.
 
 %files
 %license COPYING
 %doc NEWS
-%dir %{octpkglibdir}
-%{octpkglibdir}/*
 %dir %{octpkgdir}
 %{octpkgdir}/*
+%dir %{octpkglibdir}
+%{octpkglibdir}/*
+#{_metainfodir}/*.metainfo.xml
 
 #---------------------------------------------------------------------------
 
 %prep
 %autosetup -p1 -n %{octpkg}-%{version}
-
-# remove backup files
-#find . -name \*~ -delete
 
 %build
 export CC=gcc
