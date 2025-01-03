@@ -10,6 +10,14 @@ Url:		https://packages.octave.org/tisean/
 Source0:	https://downloads.sourceforge.net/octave/tisean-%{version}.tar.gz
 # (upstream) https://savannah.gnu.org/bugs/index.php?61583
 Patch0:		of-tisean-error_state.patch
+# https://hg.octave.org/mxe-octave/file/tip/src/of-tisean-1-fixes.patch
+Patch1:		of-tisean-1-fixes.patch
+# https://hg.octave.org/mxe-octave/file/tip/src/of-tisean-2-error_state.patch
+#Patch2:		of-tisean-2-error_state.patch
+# https://hg.octave.org/mxe-octave/file/tip/src/of-tisean-3-octave-9-compat.patch
+#Patch3:		of-tisean-3-octave-9-compat.patch
+Patch3:		of-tisean-3-octave-9-compat-new.patch
+Patch4:		octave-tisean-0.2.3-octave-9.patch
 
 BuildRequires:  octave-devel >= 4.0.0
 BuildRequires:	octave-signal >= 1.3.0

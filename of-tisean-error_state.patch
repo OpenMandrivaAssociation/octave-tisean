@@ -1392,8 +1392,8 @@ diff -r 71f2c8fde0c5 -r e40a599d68cf src/__lfo_ar__.cc
 -          // if count == 0 then the output will be an 0x4+dim matrix
 -          output.resize (count, dim + 4);
 +	  // Promote warnings connected with singular matrixes to errors
-+	  set_warning_state ("Octave:nearly-singular-matrix","error");
-+	  set_warning_state ("Octave:singular-matrix","error");
++	  octave::set_warning_state ("Octave:nearly-singular-matrix","error");
++	  octave::set_warning_state ("Octave:singular-matrix","error");
 +
 +	  // Estimate maximum possible output size
 +	  octave_idx_type output_rows = (octave_idx_type)
@@ -1519,8 +1519,8 @@ diff -r 71f2c8fde0c5 -r e40a599d68cf src/__lfo_run__.cc
 -          set_warning_state ("Octave:nearly-singular-matrix","error");
 -          set_warning_state ("Octave:singular-matrix","error");
 +      // Promote warnings connected with singular matrixes to errors
-+      set_warning_state ("Octave:nearly-singular-matrix","error");
-+      set_warning_state ("Octave:singular-matrix","error");
++      octave::set_warning_state ("Octave:nearly-singular-matrix","error");
++      octave::set_warning_state ("Octave:singular-matrix","error");
  
 -          // Calculate the maximum epsilon that makes sense
 -          // On the basis of 'i' and 'j' from put_in_boxes ()
@@ -1921,8 +1921,8 @@ diff -r 71f2c8fde0c5 -r e40a599d68cf src/__lyap_spec__.cc
 -          set_warning_state ("Octave:nearly-singular-matrix","error");
 -          set_warning_state ("Octave:singular-matrix","error");
 +      // Promote warnings connected with singular matrixes to errors
-+      set_warning_state ("Octave:nearly-singular-matrix","error");
-+      set_warning_state ("Octave:singular-matrix","error");
++      octave::set_warning_state ("Octave:nearly-singular-matrix","error");
++      octave::set_warning_state ("Octave:singular-matrix","error");
  
 -          // Prepare data for running first time
 -          if (count == 0)
@@ -2737,8 +2737,8 @@ diff -r 71f2c8fde0c5 -r e40a599d68cf src/__polynom__.cc
 -          make_fit (series, coding, results, INSAMPLE, N, DIM, DELAY,
 -                    maxencode, pars);
 +      // Promote warnings connected with singular matrixes to errors
-+      set_warning_state ("Octave:nearly-singular-matrix","error");
-+      set_warning_state ("Octave:singular-matrix","error");
++      octave::set_warning_state ("Octave:nearly-singular-matrix","error");
++      octave::set_warning_state ("Octave:singular-matrix","error");
 +
 +      // Make the fit
 +      make_fit (series, coding, results, INSAMPLE, N, DIM, DELAY,
@@ -2885,8 +2885,8 @@ diff -r 71f2c8fde0c5 -r e40a599d68cf src/__rbf__.cc
 -      if (! error_state)
 -        {
 +      // Promote warnings connected with singular matrixes to errors
-+      set_warning_state ("Octave:nearly-singular-matrix","error");
-+      set_warning_state ("Octave:singular-matrix","error");
++      octave::set_warning_state ("Octave:nearly-singular-matrix","error");
++      octave::set_warning_state ("Octave:singular-matrix","error");
  
 -          // Promote warnings connected with singular matrixes to errors
 -          set_warning_state ("Octave:nearly-singular-matrix","error");
@@ -3647,8 +3647,8 @@ diff -r 71f2c8fde0c5 -r e40a599d68cf src/mutual.cc
 -        }
 -    }
 +	  // Promote warnings connected with singular matrixes to errors
-+	  set_warning_state ("Octave:nearly-singular-matrix","error");
-+	  set_warning_state ("Octave:singular-matrix","error");
++	  octave::set_warning_state ("Octave:nearly-singular-matrix","error");
++	  octave::set_warning_state ("Octave:singular-matrix","error");
 +
 +	  // Calculate the maximum epsilon that makes sense
 +	  // On the basis of 'i' and 'j' from put_in_boxes ()

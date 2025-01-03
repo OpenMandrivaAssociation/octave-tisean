@@ -1,0 +1,341 @@
+diff -up tisean-0.2.3/inst/av_d2.m.omv~ tisean-0.2.3/inst/av_d2.m
+--- tisean-0.2.3/inst/av_d2.m.omv~	2025-01-03 09:08:56.342066634 +0000
++++ tisean-0.2.3/inst/av_d2.m	2025-01-03 09:10:20.553504790 +0000
+@@ -149,8 +149,8 @@ function output = av_d2 (d2_c2d_c1_out,
+   # Create smoothing functions
+   # Smoothes single column
+   smooth_column = @(col) sum (col((-aver:aver) ...
+-                                  .+(aver+1:(length(col)-aver)).'),2) ...
+-                         ./(2*aver + 1);
++                                  +(aver+1:(length(col)-aver)).'),2) ...
++                        ./(2*aver + 1);
+   # Smoothes one cell
+   smooth_cell   = @(cell_mat) [smooth_column(cell_mat{1}(:,1)), ...
+                                smooth_column(cell_mat{1}(:,2))];
+diff -up tisean-0.2.3/inst/c2g.m.omv~ tisean-0.2.3/inst/c2g.m
+--- tisean-0.2.3/inst/c2g.m.omv~	2025-01-03 09:14:27.875379289 +0000
++++ tisean-0.2.3/inst/c2g.m	2025-01-03 09:16:38.891532044 +0000
+@@ -123,9 +123,9 @@ function output = c2g (d2_out)
+ 
+     # Create column vectors instead of using loop
+     k_id    = 1:length(tmp.c2)-1;
+-    f       = exp((emat(k_id+1).*cmat(k_id).-emat(k_id).*cmat(k_id+1))
+-              ./(emat(k_id+1).-emat(k_id)));
+-    d       = (cmat(k_id+1).-cmat(k_id))./(emat(k_id+1).-emat(k_id));
++    f       = exp((emat(k_id+1).*cmat(k_id)-emat(k_id).*cmat(k_id+1))
++              /(emat(k_id+1)-emat(k_id)));
++    d       = (cmat(k_id+1)-cmat(k_id))/(emat(k_id+1)-emat(k_id));
+     a       = emat(k_id);
+     b       = emat(k_id+1);
+ 
+@@ -139,11 +139,11 @@ function output = c2g (d2_out)
+     g            = sum (__c2g__ (h, f, d, a, b, false));
+     gd           = sum (__c2g__ (h, f, d, a, b, true));
+     de           = emat(end);
+-    cgauss       = g ./ (h.^2) + exp (-exp (2.*de) ./ (2.*h.^2));
+-    cgd          = gd ./ (h.^4) + (2 + exp (2*de) ./ h.^2) ...
+-                   .* exp (-exp (2*de) ./ (2.*h.^2));
++    cgauss       = g / (h.^2) + exp (-exp (2.*de) / (2.*h.^2));
++    cgd          = gd / (h.^4) + (2 + exp (2*de) / h.^2) ...
++                   .* exp (-exp (2*de) / (2*h.^2));
+ 
+-    g_out{i} = [h.', cgauss.', (-2+cgd./cgauss).'];
++    g_out{i} = [h.', cgauss.', (-2+cgd/cgauss).'];
+   endfor
+ 
+   output = struct ("dim", {d2_out.dim}.', "g", g_out);
+diff -up tisean-0.2.3/inst/av_d2.m.omv~ tisean-0.2.3/inst/av_d2.m
+--- tisean-0.2.3/inst/av_d2.m.omv~	2025-01-03 09:24:53.090219031 +0000
++++ tisean-0.2.3/inst/av_d2.m	2025-01-03 09:25:31.470197401 +0000
+@@ -150,7 +150,7 @@ function output = av_d2 (d2_c2d_c1_out,
+   # Smoothes single column
+   smooth_column = @(col) sum (col((-aver:aver) ...
+                                   +(aver+1:(length(col)-aver)).'),2) ...
+-                        ./(2*aver + 1);
++                        /(2*aver + 1);
+   # Smoothes one cell
+   smooth_cell   = @(cell_mat) [smooth_column(cell_mat{1}(:,1)), ...
+                                smooth_column(cell_mat{1}(:,2))];
+@@ -199,7 +199,7 @@ function output = av_d2 (d2_c2d_c1_out,
+ #    if (tmp.dim >= mindim && tmp.dim <= maxdim)
+ #      d2_smooth = zeros (length(tmp.d2)-2*aver,2);
+ #      for k = aver+1:(length(tmp.d2)-aver)
+-#        d2_smooth(k-aver,:) = sum (tmp.d2((-aver:aver)+k,:))./(2*aver + 1);
++#        d2_smooth(k-aver,:) = sum (tmp.d2((-aver:aver)+k,:))/(2*aver + 1);
+ #      endfor
+ #      output = [output; struct("d2",d2_smooth)];
+ #    endif
+diff -up tisean-0.2.3/inst/c2d.m.omv~ tisean-0.2.3/inst/c2d.m
+--- tisean-0.2.3/inst/c2d.m.omv~	2025-01-03 09:26:11.501209191 +0000
++++ tisean-0.2.3/inst/c2d.m	2025-01-03 09:26:47.520112527 +0000
+@@ -107,8 +107,8 @@ function output = c2d (c1_out, iav)
+     sidx = idx.' + (-iav:iav); # this is instead of loops in original TISEAN
+     sx   = sum (emat(sidx), 2);
+     sa   = sum ((emat(sidx)-sx/(2*iav+1)).^2, 2);
+-    a    = sum (cmat(sidx).*(emat(sidx)-sx/(2*iav+1)), 2);
+-    a    = a ./ sa;
++    a    = sum (cmat(sidx).*(emat(sidx)-sx/(2*iav+1)), 2);
++    a    = a / sa;
+ 
+     d_out{i} = [(exp (0.5*(emat(idx+iav) + emat(idx-iav)))), a];
+   endfor
+diff -up tisean-0.2.3/inst/c2t.m.omv~ tisean-0.2.3/inst/c2t.m
+--- tisean-0.2.3/inst/c2t.m.omv~	2025-01-03 09:18:22.927633525 +0000
++++ tisean-0.2.3/inst/c2t.m	2025-01-03 09:19:19.856270053 +0000
+@@ -109,18 +109,18 @@ function output = c2t (d2_c1_out)
+     emat    = log (corr_sums(idx,1));
+     cmat    = log (corr_sums(idx,2));
+ 
+-    b = (emat(2:end) .* cmat(1:end-1) .- emat(1:end-1) .* cmat(2:end)) ...
+-        ./ (emat(2:end) .- emat(1:end-1));
+-    a = (cmat(2:end) - cmat(1:end-1)) ./ (emat(2:end) - emat(1:end-1));
++    b = (emat(2:end) .* cmat(1:end-1) - emat(1:end-1) .* cmat(2:end)) ...
++        / (emat(2:end) - emat(1:end-1));
++    a = (cmat(2:end) - cmat(1:end-1)) / (emat(2:end) - emat(1:end-1));
+ 
+-    cint       = (exp (b) ./ a) ...
+-                 .* (exp (a .* emat(2:end)) - exp (a .* emat(1:end-1)));
++    cint       = (exp (b) / a) ...
++                 .* (exp (a .* emat(2:end)) - exp (a .* emat(1:end-1)));
+     # If a(i) == 0 then the right side above is '+/-Inf * (1-1)' which is NaN.
+     tidx       = find (isnan (cint));
+-    cint(tidx) = exp (b(tidx)) .* (emat(tidx+1) - emat(tidx));
++    cint(tidx) = exp (b(tidx)) .* (emat(tidx+1) - emat(tidx));
+     cint       = cumsum (cint);
+ 
+-    t_out{j} = [exp(emat(2:end)),exp(cmat(2:end))./cint];
++    t_out{j} = [exp(emat(2:end)),exp(cmat(2:end))/cint];
+   endfor
+ 
+   output = struct ("dim", {d2_c1_out.dim}.', "t", t_out);
+diff -up tisean-0.2.3/inst/endtoend.m.omv~ tisean-0.2.3/inst/endtoend.m
+--- tisean-0.2.3/inst/endtoend.m.omv~	2025-01-03 09:20:23.826064847 +0000
++++ tisean-0.2.3/inst/endtoend.m	2025-01-03 09:21:39.018121933 +0000
+@@ -209,11 +209,11 @@ S=    reshape (S, [rows(S),1,columns(S)]
+     endwhile
+     etot = original_col_S;
+     for nj = 0:(rows (S) - nmaxp)
+-      [x,s] = mismatch (S((1:nmaxp).+nj,1,:));
++      [x,s] = mismatch (S((1:nmaxp)+nj,1,:));
+       xj(1+nj) = x;
+       sj(1+nj) = s;
+     endfor
+-    [min_weighted, min_idx] = min (weigth_jump .* xj + (1 - weigth_jump) .* sj);
++    [min_weighted, min_idx] = min (weigth_jump .* xj + (1 - weigth_jump) .* sj);
+     if (min_weighted < etot)
+       etot    = min_weighted;
+       ejump   = xj(min_idx);
+@@ -266,15 +266,15 @@ endfunction
+ # For internal use only
+ function [xjump, sjump] = mismatch (x)
+ 
+-  denominator  = (rows (x) - 1) .* var (x); # <- always nonnegative values
++  denominator  = (rows (x) - 1) .* var (x); # <- always nonnegative values
+   zero_var_idx = find (denominator == 0);
+   denominator (zero_var_idx) = -1; # <- to allow inverting
+-  denominator                = 1./denominator;
++  denominator                = 1/denominator;
+   denominator (zero_var_idx) = 0;
+ 
+-  xjump = sum ((x(1,:,:) - x(end,:,:)).^2 .* denominator,3);
++  xjump = sum ((x(1,:,:) - x(end,:,:)).^2 .* denominator,3);
+   sjump = sum (((x(end,:,:) - x(end-1,:,:)) - (x(2,:,:) - x(1,:,:))) .^ 2 
+-               .* denominator,3);
++               .* denominator,3);
+ endfunction
+ 
+ %% Test output against TISEAN output
+diff -up tisean-0.2.3/inst/ghkss.m.omv~ tisean-0.2.3/inst/ghkss.m
+--- tisean-0.2.3/inst/ghkss.m.omv~	2025-01-03 09:27:04.338532162 +0000
++++ tisean-0.2.3/inst/ghkss.m	2025-01-03 09:27:32.032220359 +0000
+@@ -96,7 +96,7 @@ function output = ghkss (S, varargin)
+   delay      = 1;
+   qdim       = 2;
+   minn       = 50;
+-  mineps     = 1./1000.;
++  mineps     = 1/1000.;
+   eps_set    = 0;
+   iterations = 1;
+   euclidean  = 0;
+@@ -162,7 +162,7 @@ endfunction
+ %!demo
+ %! hen    = henon (10000);
+ %! # The following line is equvalent to 'addnoise -v0.02 hen' from TISEAN
+-%! hen    = hen + std (hen) * 0.02 .* (-6 + sum (rand ([size(hen), 12]), 3));
++%! hen    = hen + std (hen) * 0.02 .* (-6 + sum (rand ([size(hen), 12]), 3));
+ %! hendel = delay (hen(:,1));
+ %! hengk = ghkss (hen(:,1),'m',7,'q',2,'r',0.05,'k',20,'i',2);
+ %! hengk = delay (hengk);
+diff -up tisean-0.2.3/inst/lyap_k.m.omv~ tisean-0.2.3/inst/lyap_k.m
+--- tisean-0.2.3/inst/lyap_k.m.omv~	2025-01-03 09:27:46.351574862 +0000
++++ tisean-0.2.3/inst/lyap_k.m	2025-01-03 09:28:22.194458455 +0000
+@@ -218,7 +218,7 @@ setting 'mmin' = 'mmax'");
+ endfunction
+ %!demo
+ %! idx    = (1:2500).';
+-%! in     = sin (idx./360) + cos (idx ./ 180);
++%! in     = sin (idx/360) + cos (idx / 180);
+ %! mmax   = 20;
+ %! res    = lyap_k (in, 'mmin',2,'mmax',mmax,'d',6,'s',400,'t',500);
+ %!
+diff -up tisean-0.2.3/inst/lyap_r.m.omv~ tisean-0.2.3/inst/lyap_r.m
+--- tisean-0.2.3/inst/lyap_r.m.omv~	2025-01-03 09:28:26.623567283 +0000
++++ tisean-0.2.3/inst/lyap_r.m	2025-01-03 09:28:47.361075787 +0000
+@@ -138,7 +138,7 @@ endfunction
+ 
+ %!demo
+ %! idx = (1:2500).';
+-%! in = sin (idx ./ 360) + cos (idx ./ 180);
++%! in = sin (idx / 360) + cos (idx / 180);
+ %! mmax = 15;
+ %!
+ %! cla reset
+@@ -156,7 +156,7 @@ endfunction
+ 
+ %!test
+ %! lyap_r_res =  [0 -2.983802;1 -2.980538;2 -2.962341;3 -2.931719;4 -2.891934;5 -2.846183;6 -2.797121;7 -2.74671;8 -2.69629;9 -2.646711;10 -2.598477];
+-%! in = sin((1:1000).'./360);
++%! in = sin((1:1000).'/360);
+ %! res = lyap_r (in, 'm',4 ,'d',6,'s',10,'t',100);
+ %! assert (res, lyap_r_res, -1e-6);
+ 
+diff -up tisean-0.2.3/inst/lyap_spec.m.omv~ tisean-0.2.3/inst/lyap_spec.m
+--- tisean-0.2.3/inst/lyap_spec.m.omv~	2025-01-03 09:28:56.293294311 +0000
++++ tisean-0.2.3/inst/lyap_spec.m	2025-01-03 09:29:40.281366235 +0000
+@@ -242,7 +242,7 @@ endfunction
+ %! assert (res, tisean_res, 1e-6);
+ 
+ %% test for matrix near singularity
+-%!error <singular> lyap_spec (sin((1:1000).'./360), 'm',4);
++%!error <singular> lyap_spec (sin((1:1000).'/360), 'm',4);
+ 
+ %% Testing input validation
+ %!error <not long> lyap_spec (1:10, 'k',10);
+diff -up tisean-0.2.3/inst/lzo_run.m.omv~ tisean-0.2.3/inst/lzo_run.m
+--- tisean-0.2.3/inst/lzo_run.m.omv~	2025-01-03 09:29:48.814573406 +0000
++++ tisean-0.2.3/inst/lzo_run.m	2025-01-03 09:30:04.507953764 +0000
+@@ -165,7 +165,7 @@ endfunction
+ %!demo
+ %! idx = 1:5000;
+ %% sin_saw is a sinusoid multiplied by a saw function.
+-%! sin_saw = (5 + mod (idx, 165) ./15) .* sin (idx.* 2 * pi /32);
++%! sin_saw = (5 + mod (idx, 165) /15) .* sin (idx.* 2 * pi /32);
+ %! sin_saw = sin_saw.';
+ %% m=4, d=6 was chosen as the best fit values in demo lzo_test.
+ %! no_noise = lzo_run (sin_saw(1:4500), 'm',4,'d',6,'l',500);
+diff -up tisean-0.2.3/inst/lzo_test.m.omv~ tisean-0.2.3/inst/lzo_test.m
+--- tisean-0.2.3/inst/lzo_test.m.omv~	2025-01-03 09:30:08.629053510 +0000
++++ tisean-0.2.3/inst/lzo_test.m	2025-01-03 09:30:59.438278955 +0000
+@@ -197,7 +197,7 @@ endfunction
+ %!demo
+ %! idx = (1:10000).';
+ %! # sin_saw is a sinusoid multiplied by a saw function.
+-%! sin_saw = (5 + mod (idx, 165) ./ 15) .* sin (idx.* 2 * pi /32);
++%! sin_saw = (5 + mod (idx, 165) / 15) .* sin (idx.* 2 * pi /32);
+ %! steps = 250;
+ %! rel1  = lzo_test (sin_saw, 'm', 2, 'd', 6, 's', steps);
+ %! rel2  = lzo_test (sin_saw, 'm', 3, 'd', 6, 's', steps);
+diff -up tisean-0.2.3/inst/poincare.m.omv~ tisean-0.2.3/inst/poincare.m
+--- tisean-0.2.3/inst/poincare.m.omv~	2025-01-03 09:31:05.112415324 +0000
++++ tisean-0.2.3/inst/poincare.m	2025-01-03 09:31:30.929034635 +0000
+@@ -165,7 +165,7 @@ endfunction
+ 
+ %!shared in
+ %! idx = (1:1500).';
+-%! in  = (5 + mod (idx, 165) ./15) .* sin (idx.* 2 * pi /32);
++%! in  = (5 + mod (idx, 165) /15) .* sin (idx.* 2 * pi /32);
+ 
+ %!fail("poincare(ones(1,100), 'a',2)");
+ 
+diff -up tisean-0.2.3/inst/polynom.m.omv~ tisean-0.2.3/inst/polynom.m
+--- tisean-0.2.3/inst/polynom.m.omv~	2025-01-03 09:31:36.272162580 +0000
++++ tisean-0.2.3/inst/polynom.m	2025-01-03 09:31:49.897488499 +0000
+@@ -155,7 +155,7 @@ endfunction
+ %!demo
+ %! idx = (1:2500).';
+ %! # sin_saw is a sinusoid multiplied by a saw function
+-%! sin_saw = (5 + mod (idx, 165) ./15) .* sin (idx.* 2 * pi /32);
++%! sin_saw = (5 + mod (idx, 165) /15) .* sin (idx.* 2 * pi /32);
+ %!
+ %! forc_no = 170; %Number of forecasted points
+ %! [p,forecast]  = polynom (sin_saw(1:end-forc_no), 'm', 2, 'd', 6, 'p', 4,
+diff -up tisean-0.2.3/inst/rbf.m.omv~ tisean-0.2.3/inst/rbf.m
+--- tisean-0.2.3/inst/rbf.m.omv~	2025-01-03 09:31:56.986657889 +0000
++++ tisean-0.2.3/inst/rbf.m	2025-01-03 09:32:11.838012285 +0000
+@@ -217,7 +217,7 @@ endfunction
+ %!demo
+ %! # sin_saw is a sinusoid multiplied by a saw function
+ %! idx = (1:2500).';
+-%! sin_saw = (5 + mod (idx, 165) ./15) .* sin (idx.* 2 * pi /32);
++%! sin_saw = (5 + mod (idx, 165) /15) .* sin (idx.* 2 * pi /32);
+ %!
+ %! forc_no = 170; #Number of forecasted points
+ %! [p,forecast]  = rbf (sin_saw(1:end-forc_no), 'm', 2, 'd', 6, 'p',12,...
+diff -up tisean-0.2.3/inst/spikespec.m.omv~ tisean-0.2.3/inst/spikespec.m
+--- tisean-0.2.3/inst/spikespec.m.omv~	2025-01-03 09:32:19.517195320 +0000
++++ tisean-0.2.3/inst/spikespec.m	2025-01-03 09:32:44.727795200 +0000
+@@ -182,7 +182,7 @@ function output = spikespec (X, varargin
+   idx    = (1+ibin:2*ibin+1:nfreq-ibin).';
+ 
+   # Calculating the frequencies (accounts for binning)
+-  freqs = (idx .* freq_max) ./ nfreq;
++  freqs = (idx .* freq_max) / nfreq;
+ 
+   # Calculate full spectrum
+   omega = 2 * pi * freq_max * ((1:nfreq) / nfreq);
+diff -up tisean-0.2.3/inst/timerev.m.omv~ tisean-0.2.3/inst/timerev.m
+--- tisean-0.2.3/inst/timerev.m.omv~	2025-01-03 09:32:50.836940338 +0000
++++ tisean-0.2.3/inst/timerev.m	2025-01-03 09:32:58.679126520 +0000
+@@ -113,7 +113,7 @@ function output = timerev (S, delay);
+   idx    = delay+1:rows(S);
+   t2     = sum ((S(idx,:) - S(idx-delay,:)).^2);
+   t3     = sum ((S(idx,:) - S(idx-delay,:)).^3);
+-  output = t3./t2;
++  output = t3/t2;
+ 
+   # Transpose output if input components were row vectors and not column vectors
+   if (trnspsd)
+diff -up tisean-0.2.3/inst/upoembed.m.omv~ tisean-0.2.3/inst/upoembed.m
+--- tisean-0.2.3/inst/upoembed.m.omv~	2025-01-03 09:22:31.027515452 +0000
++++ tisean-0.2.3/inst/upoembed.m	2025-01-03 09:23:33.591163672 +0000
+@@ -126,8 +126,8 @@ values of olens");
+   ## Create delay vectors
+   j         = (m:-1:1);
+   delay_vec = @(x) orbit_data(sum(olens(1:idx(x)-1))+ ...
+-                              mod(((1:olens(idx(x))+1).').-...
+-                              (j-1).*delay -1 +m.*olens(idx(x)),...
++                              mod(((1:olens(idx(x))+1).')-...
++                              (j-1).*delay -1 +m.*olens(idx(x)),...
+                               olens(idx(x)))+1);
+   output    = arrayfun (delay_vec,(1:length(idx)).','UniformOutput', false);
+ 
+@@ -138,7 +138,7 @@ values of olens");
+   #    for k=1:olens(i)+1;
+   #      for j=m:-1:1;
+   #       output(sum(olens(1:i-1)+1)+k,m+1-j) = ...
+-  #       orbit_data(sum(olens(1:i-1))+mod(k.-(j-1).*delay-1+m*olens(i),olens(i))+1);
++  #       orbit_data(sum(olens(1:i-1))+mod(k-(j-1).*delay-1+m*olens(i),olens(i))+1);
+   #      endfor
+   #    endfor
+   #  endfor
+diff -up tisean-0.2.3/inst/upo.m.omv~ tisean-0.2.3/inst/upo.m
+--- tisean-0.2.3/inst/upo.m.omv~	2025-01-03 09:21:45.127286826 +0000
++++ tisean-0.2.3/inst/upo.m	2025-01-03 09:24:31.609667649 +0000
+@@ -80,7 +80,7 @@
+ ## n-the orbit you need to:
+ ## @example
+ ##
+-## nth_orbit_data = orbit_data(sum(olens(1:n-1)).+(1:olens(n)));
++## nth_orbit_data = orbit_data(sum(olens(1:n-1))+(1:olens(n)));
+ ##
+ ## @end example
+ ## @item acc
+@@ -212,7 +212,7 @@ endfunction
+ %!demo
+ %! hen    = henon (1000);
+ %! # The following line is equvalent to 'addnoise -v0.1 hen' from TISEAN
+-%! hen    = hen + std (hen) * 0.1 .* (-6 + sum (rand ([size(hen), 12]), 3));
++%! hen    = hen + std (hen) * 0.1 .* (-6 + sum (rand ([size(hen), 12]), 3));
+ %! hendel = delay (hen(:,1));
+ %! [olens, odata] = upo(hen(:,1), 2, 'p',6,'v',0.1, 'n', 100);
+ %! up    = upoembed (olens, odata, 1);
