@@ -3,7 +3,7 @@
 Summary:	Nonlinear Time Series Analysis
 Name:		octave-tisean
 Version:	0.2.3
-Release:	3
+Release:	4
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://packages.octave.org/tisean/
