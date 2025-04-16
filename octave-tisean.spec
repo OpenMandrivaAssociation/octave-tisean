@@ -1,9 +1,14 @@
 %global octpkg tisean
 
+# For now -- since C code (built with clang) and
+# Fortran code (built with gfortran) are linked
+# together, LTO object files don't work
+%global _disable_lto 1
+
 Summary:	Nonlinear Time Series Analysis
 Name:		octave-tisean
 Version:	0.2.3
-Release:	4
+Release:	5
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://packages.octave.org/tisean/
@@ -45,8 +50,6 @@ Nonlinear Time Series Analysis. Port of TISEAN 3.0.1.
 %autosetup -p1 -n %{octpkg}-%{version}
 
 %build
-export CC=gcc
-export CXX=g++
 export CXXFLAGS="%{optflags} -lgfortran"
 %set_build_flags
 %octave_pkg_build
